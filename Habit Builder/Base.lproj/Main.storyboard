@@ -91,12 +91,32 @@
                                             <action selector="buildHabit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="y89-Dw-R9J"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T34-Z1-TD1">
+                                        <rect key="frame" x="320" y="142" width="30" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="〉"/>
+                                        <connections>
+                                            <action selector="nextHabit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rRx-ey-NPN"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uIQ-bt-CrT">
+                                        <rect key="frame" x="25" y="142.5" width="30" height="35"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                        <state key="normal" title="〈"/>
+                                        <connections>
+                                            <action selector="previousHabit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5gy-1T-nbx"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="uIQ-bt-CrT" firstAttribute="leading" secondItem="sN6-kZ-Myh" secondAttribute="leading" constant="25" id="1Sg-e8-42w"/>
                                     <constraint firstAttribute="bottom" secondItem="7l9-gB-GGB" secondAttribute="bottom" constant="100" id="2MH-Wr-Tyj"/>
                                     <constraint firstItem="1Io-lb-XzE" firstAttribute="centerX" secondItem="sN6-kZ-Myh" secondAttribute="centerX" id="Hcr-kf-YOv"/>
+                                    <constraint firstItem="T34-Z1-TD1" firstAttribute="centerY" secondItem="1Io-lb-XzE" secondAttribute="centerY" id="KZG-AL-KSX"/>
                                     <constraint firstAttribute="trailing" secondItem="Zp3-OP-YO0" secondAttribute="trailing" constant="37" id="NfQ-A0-MKy"/>
+                                    <constraint firstItem="uIQ-bt-CrT" firstAttribute="centerY" secondItem="1Io-lb-XzE" secondAttribute="centerY" id="O8e-ly-GsU"/>
+                                    <constraint firstAttribute="trailing" secondItem="T34-Z1-TD1" secondAttribute="trailing" constant="25" id="cOJ-mC-nbp"/>
                                     <constraint firstItem="7l9-gB-GGB" firstAttribute="centerX" secondItem="sN6-kZ-Myh" secondAttribute="centerX" id="df9-lg-yto"/>
                                     <constraint firstItem="1Io-lb-XzE" firstAttribute="top" secondItem="sN6-kZ-Myh" secondAttribute="top" constant="150" id="lFT-nW-DO9"/>
                                     <constraint firstItem="Zp3-OP-YO0" firstAttribute="top" secondItem="sN6-kZ-Myh" secondAttribute="top" constant="47" id="nuX-er-o96"/>

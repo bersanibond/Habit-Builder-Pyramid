@@ -9,31 +9,75 @@
 import UIKit
 
 class ViewController: UIViewController {
+   
     var habitsLabelArray = [String]()
     var habitsBlocksArray = [String: Int]()
     var lastSignInDate = [String: String]()
+    var goalDoneForToday = [String: Bool]()
     var habitNameToArray: String?
+    var keyOfLabelDisplaying: String?
     var defaults = UserDefaults.standard
+    let date = Date()
+    var lastTimeYouWorkOnThisHabit: String?
+    var numberOfHabits: Int = 0
+    var numberOfHabitsMinusOne: Int = 0
+    let todayDate = Date()
+    let calendar = Calendar.current
     
+    var appLastLogin: Any?
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
         if let labelArray = defaults.array(forKey: "HabitsLabelArray") as? [String]{
             habitsLabelArray = labelArray
         }
         if let array = defaults.dictionary(forKey: "HabitsBlockArray") as? [String: Int]{
             habitsBlocksArray = array
         }
-        if let signInDate = defaults.dictionary(forKey: "LastSignInDate") as? [String: String] {
+        if let signInDate = defaults.dictionary(forKey: "LastSignInDate") as? [String: String]{
             lastSignInDate = signInDate
+        }
+        if let goalDone = defaults.dictionary(forKey: "GoalDoneForToday") as? [String: Bool]{
+            goalDoneForToday = goalDone
         }
         if habitsLabelArray.isEmpty {
             habitsView.isHidden = true
+            
         }
+        var numberOfHabitsForArray: Int = 0
+        numberOfHabitsForArray = habitsLabelArray.count
+        numberOfHabitsMinusOne = numberOfHabitsForArray - 1
+        numberOfHabits = numberOfHabitsForArray - 1
         habitLabelDisplaying.text = habitsLabelArray.last
-        let date = Date()
-        print("The date is :\(date)")
+        
+        
+        let hour = calendar.component(.hour, from: todayDate)
+        let minute = calendar.component(.minute, from: todayDate)
+        let day = calendar.component(.day, from: todayDate)
+        let month = calendar.component(.month, from: todayDate)
+        let year = calendar.component(.year, from: todayDate)
+        print("\(day)-\(month)-\(year)  \(hour):\(minute)")
+        let date = "\(day)-\(month)-\(year)  \(hour):\(minute)"
+//        lastTimeYouWorkOnThisHabit = date
+        
+        if let appLastOpen = defaults.object(forKey: "AppLastOpen") as? String{
+            appLastLogin = appLastOpen
+        }
+        let appLastLogIn = "\(appLastLogin ?? "")"
+        
+        if date != appLastLogIn{
+            defaults.set(date, forKey: "AppLastOpen")
+//            you are creating a loop to update value of all keys to false, when
+            for key in habitsLabelArray {
+                goalDoneForToday.updateValue(false, forKey: key)
+            }
+ 
+            print(date)
+            print(appLastLogIn)
+        }
     }
+           //    let differentDays = Calendar.current.dateComponents([.day], from: date1, to: date2).date
+//  let differentDays = Calendar.current.dateComponents([.day], from: todayDate, to: <#T##Date#>)
 
     @IBOutlet weak var start: UIButton!
     @IBOutlet weak var nameTheHabit: UITextField!
@@ -64,19 +108,23 @@ class ViewController: UIViewController {
         habitNameToArray = habitName.text
         habitsLabelArray.append(habitNameToArray!)
         habitsBlocksArray.updateValue(0, forKey: habitNameToArray!)
-        let date = Date()
-        lastSignInDate.updateValue("\(date)", forKey: habitNameToArray!)
+        goalDoneForToday.updateValue(false, forKey: habitNameToArray!)
+        lastSignInDate.updateValue("", forKey: habitNameToArray!)
 //        habitsLabelArray.removeAll()
 //        habitsBlocksArray.removeAll()
+//        lastSignInDate.removeAll()
+//        goalDoneForToday.removeAll()
+//          defaults.set("", forKey: "AppLastOpen")
         self.defaults.set(self.habitsLabelArray, forKey: "HabitsLabelArray")
         self.defaults.set(self.habitsBlocksArray, forKey: "HabitsBlockArray")
         self.defaults.set(self.lastSignInDate, forKey: "LastSignInDate")
-       
+        self.defaults.set(self.goalDoneForToday, forKey: "GoalDoneForToday")
         
         print(habitsBlocksArray)
         print(" \(habitsLabelArray)")
         print("date:\(lastSignInDate)")
         habitLabelDisplaying.text = habitsLabelArray.last
+        numberOfHabits = habitsLabelArray.count - 1
         
     }
     @IBAction func addMorehabits(_ sender: Any) {
@@ -93,24 +141,63 @@ class ViewController: UIViewController {
     @IBOutlet weak var habitLabelDisplaying: UILabel!
     
     @IBAction func buildHabit(_ sender: Any) {
+
+        keyOfLabelDisplaying = habitLabelDisplaying.text
+        let habitAlreadyBuiltToday = goalDoneForToday[keyOfLabelDisplaying!]
+        //      Time
+        let lastSignIn = Date()
+        let hour = calendar.component(.hour, from: lastSignIn)
+        let minute = calendar.component(.minute, from: lastSignIn)
+        let day = calendar.component(.day, from: lastSignIn)
+        let month = calendar.component(.month, from: lastSignIn)
+        let year = calendar.component(.year, from: lastSignIn)
+        print("\(day)-\(month)-\(year)  \(hour):\(minute)")
+        let date = "\(day)-\(month)-\(year)  \(hour):\(minute)"
+        lastTimeYouWorkOnThisHabit = date
         
-        let keyOfLabelDisplaying = habitLabelDisplaying.text
-        
-//        habitsBlocksArray.values
-//        habitsBlocksArray.updateValue(<#T##value: Int##Int#>, forKey: <#T##String#>)
-        
-        let currentBlockNumber = habitsBlocksArray[keyOfLabelDisplaying!]
-        let currentBlockPlusOne = currentBlockNumber! + 1
-        habitsBlocksArray.updateValue(currentBlockPlusOne, forKey: keyOfLabelDisplaying!)
-        print(habitsBlocksArray[keyOfLabelDisplaying!]!)
-        print(keyOfLabelDisplaying!)
-        print("currentPlusOne : \(currentBlockPlusOne)")
+        if habitAlreadyBuiltToday == false {
+            let currentBlockNumber = habitsBlocksArray[keyOfLabelDisplaying!]
+            let currentBlockPlusOne = currentBlockNumber! + 1
+            habitsBlocksArray.updateValue(currentBlockPlusOne, forKey: keyOfLabelDisplaying!)
+            lastSignInDate.updateValue("\(lastTimeYouWorkOnThisHabit!)", forKey: keyOfLabelDisplaying!)
+            goalDoneForToday.updateValue(true, forKey: keyOfLabelDisplaying!)
+            self.defaults.set(self.lastSignInDate, forKey: "LastSignInDate")
+            self.defaults.set(self.goalDoneForToday, forKey: "GoalDoneForToday")
+           
+            print(habitsBlocksArray[keyOfLabelDisplaying!]!)
+            print(keyOfLabelDisplaying!)
+            print("currentPlusOne : \(currentBlockPlusOne)")
+            print("goaldonefortoday: \(goalDoneForToday)")
+            print(lastSignInDate)
+        }
+
     }
     
+    @IBAction func previousHabit(_ sender: UIButton) {
+        if numberOfHabits < habitsLabelArray.count - 1 {
+            keyOfLabelDisplaying = habitLabelDisplaying.text
+            let previousHabit: Int = numberOfHabits + 1
+            habitLabelDisplaying.text = habitsLabelArray[previousHabit]
+            numberOfHabits = previousHabit
+        }
+    }
     
-    // In Swift 4 there is a simple one-liner to get the number of days (or any other DateComponent) between two dates
-    //    let differentDays = Calendar.current.dateComponents([.day], from: date1, to: date2).date
+
+  
+    @IBAction func nextHabit(_ sender: UIButton) {
+        
+        if numberOfHabits > 0 {
+        keyOfLabelDisplaying = habitLabelDisplaying.text
+        let nextHabit:Int = numberOfHabits - 1
+        print(numberOfHabits)
+        print(nextHabit)
+        print(habitsLabelArray)
+        habitLabelDisplaying.text = habitsLabelArray[nextHabit]
+        numberOfHabits = nextHabit
+        }
+    }
     
+
     
   
 
