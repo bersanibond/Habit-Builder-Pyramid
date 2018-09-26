@@ -12,6 +12,7 @@ class ViewController: UIViewController {
    
     var habitsLabelArray = [String]()
     var habitsBlocksArray = [String: Int]()
+    var blockInPyramidCount: Int = 0
     var lastSignInDate = [String: String]()
     var goalDoneForToday = [String: Bool]()
     var habitNameToArray: String?
@@ -25,6 +26,7 @@ class ViewController: UIViewController {
     let calendar = Calendar.current
     
     var appLastLogin: Any?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,15 +44,14 @@ class ViewController: UIViewController {
         }
         if habitsLabelArray.isEmpty {
             habitsView.isHidden = true
-            
         }
+        
         var numberOfHabitsForArray: Int = 0
         numberOfHabitsForArray = habitsLabelArray.count
         numberOfHabitsMinusOne = numberOfHabitsForArray - 1
         numberOfHabits = numberOfHabitsForArray - 1
         habitLabelDisplaying.text = habitsLabelArray.last
-        
-        
+      
         let hour = calendar.component(.hour, from: todayDate)
         let minute = calendar.component(.minute, from: todayDate)
         let day = calendar.component(.day, from: todayDate)
@@ -71,11 +72,15 @@ class ViewController: UIViewController {
             for key in habitsLabelArray {
                 goalDoneForToday.updateValue(false, forKey: key)
             }
- 
             print(date)
             print(appLastLogIn)
+            
+            
         }
     }
+    
+    
+    
            //    let differentDays = Calendar.current.dateComponents([.day], from: date1, to: date2).date
 //  let differentDays = Calendar.current.dateComponents([.day], from: todayDate, to: <#T##Date#>)
 
@@ -163,43 +168,79 @@ class ViewController: UIViewController {
             goalDoneForToday.updateValue(true, forKey: keyOfLabelDisplaying!)
             self.defaults.set(self.lastSignInDate, forKey: "LastSignInDate")
             self.defaults.set(self.goalDoneForToday, forKey: "GoalDoneForToday")
-           
+            self.defaults.set(self.habitsBlocksArray, forKey: "HabitsBlockArray")
             print(habitsBlocksArray[keyOfLabelDisplaying!]!)
             print(keyOfLabelDisplaying!)
-            print("currentPlusOne : \(currentBlockPlusOne)")
-            print("goaldonefortoday: \(goalDoneForToday)")
-            print(lastSignInDate)
+//            print("goaldonefortoday: \(goalDoneForToday)")
+//            print(lastSignInDate)
         }
 
     }
     
     @IBAction func previousHabit(_ sender: UIButton) {
         if numberOfHabits < habitsLabelArray.count - 1 {
-            keyOfLabelDisplaying = habitLabelDisplaying.text
             let previousHabit: Int = numberOfHabits + 1
             habitLabelDisplaying.text = habitsLabelArray[previousHabit]
+            keyOfLabelDisplaying = habitLabelDisplaying.text
+            blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
+            print(blockInPyramidCount)
+            print("blockarray:\(habitsBlocksArray)")
             numberOfHabits = previousHabit
+            showBlocks(numberOfBlocks: blockInPyramidCount)
         }
     }
-    
-
   
+ 
     @IBAction func nextHabit(_ sender: UIButton) {
+      
         
         if numberOfHabits > 0 {
-        keyOfLabelDisplaying = habitLabelDisplaying.text
-        let nextHabit:Int = numberOfHabits - 1
-        print(numberOfHabits)
-        print(nextHabit)
-        print(habitsLabelArray)
-        habitLabelDisplaying.text = habitsLabelArray[nextHabit]
-        numberOfHabits = nextHabit
+       
+            let nextHabit:Int = numberOfHabits - 1
+            //        print(numberOfHabits)
+            //        print(nextHabit)
+            //        print(habitsLabelArray)
+            habitLabelDisplaying.text = habitsLabelArray[nextHabit]
+            keyOfLabelDisplaying = habitLabelDisplaying.text
+            blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
+            print(blockInPyramidCount)
+            print("blockarray:\(habitsBlocksArray)")
+            numberOfHabits = nextHabit
+            showBlocks(numberOfBlocks: blockInPyramidCount)
         }
     }
-    
 
+    @IBOutlet weak var block1: UIImageView!
     
-  
-
+    @IBOutlet weak var block2: UIImageView!
+    
+    @IBOutlet weak var block3: UIImageView!
+    
+    
+    
+    
+    func showBlocks(numberOfBlocks: Int)  {
+        let blocks = [block1, block2,block3]
+        var blockLocal = 0
+   
+        for block in blocks {
+            if blockLocal < numberOfBlocks {
+                block?.isHidden = false
+                blockLocal += 1
+         
+            } else {
+                block?.isHidden = true
+            }
+        }
+        
+        
+    }
+    
+    
 }
+
+
+
+
+
 
