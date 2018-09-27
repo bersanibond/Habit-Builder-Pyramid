@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     var defaults = UserDefaults.standard
     let date = Date()
     var lastTimeYouWorkOnThisHabit: String?
-    var numberOfHabits: Int = 0
+    var currentHabit: Int = 0
     var numberOfHabitsMinusOne: Int = 0
     let todayDate = Date()
     let calendar = Calendar.current
@@ -49,7 +49,7 @@ class ViewController: UIViewController {
         var numberOfHabitsForArray: Int = 0
         numberOfHabitsForArray = habitsLabelArray.count
         numberOfHabitsMinusOne = numberOfHabitsForArray - 1
-        numberOfHabits = numberOfHabitsForArray - 1
+        currentHabit = numberOfHabitsForArray - 1
         habitLabelDisplaying.text = habitsLabelArray.last
       
         let hour = calendar.component(.hour, from: todayDate)
@@ -75,6 +75,14 @@ class ViewController: UIViewController {
             print(date)
             print(appLastLogIn)
             
+            keyOfLabelDisplaying = habitLabelDisplaying.text
+            blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
+            showBlocks(numberOfBlocks: blockInPyramidCount)
+            
+            
+            if currentHabit > 0 {
+                previousHabits.isHidden = true
+            }
             
         }
     }
@@ -129,7 +137,9 @@ class ViewController: UIViewController {
         print(" \(habitsLabelArray)")
         print("date:\(lastSignInDate)")
         habitLabelDisplaying.text = habitsLabelArray.last
-        numberOfHabits = habitsLabelArray.count - 1
+        currentHabit = habitsLabelArray.count - 1
+        
+        
         
     }
     @IBAction func addMorehabits(_ sender: Any) {
@@ -160,7 +170,7 @@ class ViewController: UIViewController {
         let date = "\(day)-\(month)-\(year)  \(hour):\(minute)"
         lastTimeYouWorkOnThisHabit = date
         
-        if habitAlreadyBuiltToday == false {
+//        if habitAlreadyBuiltToday == false {
             let currentBlockNumber = habitsBlocksArray[keyOfLabelDisplaying!]
             let currentBlockPlusOne = currentBlockNumber! + 1
             habitsBlocksArray.updateValue(currentBlockPlusOne, forKey: keyOfLabelDisplaying!)
@@ -173,20 +183,32 @@ class ViewController: UIViewController {
             print(keyOfLabelDisplaying!)
 //            print("goaldonefortoday: \(goalDoneForToday)")
 //            print(lastSignInDate)
-        }
-
+        //        }
+        keyOfLabelDisplaying = habitLabelDisplaying.text
+        blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
+        showBlocks(numberOfBlocks: blockInPyramidCount)
     }
     
     @IBAction func previousHabit(_ sender: UIButton) {
-        if numberOfHabits < habitsLabelArray.count - 1 {
-            let previousHabit: Int = numberOfHabits + 1
+        if currentHabit < habitsLabelArray.count - 1 {
+            let previousHabit: Int = currentHabit + 1
             habitLabelDisplaying.text = habitsLabelArray[previousHabit]
             keyOfLabelDisplaying = habitLabelDisplaying.text
             blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
             print(blockInPyramidCount)
             print("blockarray:\(habitsBlocksArray)")
-            numberOfHabits = previousHabit
+            currentHabit = previousHabit
             showBlocks(numberOfBlocks: blockInPyramidCount)
+            
+            print(currentHabit)
+            print(habitsLabelArray.count)
+
+            if currentHabit > 0 {
+                nextHabit.isHidden = false
+            }
+            if currentHabit == habitsLabelArray.count-1 {
+                previousHabits.isHidden = true
+            }
         }
     }
   
@@ -194,33 +216,81 @@ class ViewController: UIViewController {
     @IBAction func nextHabit(_ sender: UIButton) {
       
         
-        if numberOfHabits > 0 {
+        if currentHabit > 0 {
        
-            let nextHabit:Int = numberOfHabits - 1
+            let nextHabitNumber:Int = currentHabit - 1
             //        print(numberOfHabits)
             //        print(nextHabit)
             //        print(habitsLabelArray)
-            habitLabelDisplaying.text = habitsLabelArray[nextHabit]
+            habitLabelDisplaying.text = habitsLabelArray[nextHabitNumber]
             keyOfLabelDisplaying = habitLabelDisplaying.text
             blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
             print(blockInPyramidCount)
             print("blockarray:\(habitsBlocksArray)")
-            numberOfHabits = nextHabit
+            currentHabit = nextHabitNumber
             showBlocks(numberOfBlocks: blockInPyramidCount)
+            previousHabits.isHidden = false
+            
+            if currentHabit == 0 {
+                nextHabit.isHidden = true
+            }
         }
     }
 
     @IBOutlet weak var block1: UIImageView!
-    
     @IBOutlet weak var block2: UIImageView!
-    
     @IBOutlet weak var block3: UIImageView!
+    @IBOutlet weak var block4: UIImageView!
+    @IBOutlet weak var block5: UIImageView!
+    @IBOutlet weak var block6: UIImageView!
+    @IBOutlet weak var block7: UIImageView!
+    @IBOutlet weak var block8: UIImageView!
+    @IBOutlet weak var block9: UIImageView!
+    @IBOutlet weak var block10: UIImageView!
+    @IBOutlet weak var block11: UIImageView!
+    @IBOutlet weak var block12: UIImageView!
+    @IBOutlet weak var block13: UIImageView!
+    @IBOutlet weak var block14: UIImageView!
+    @IBOutlet weak var block15: UIImageView!
+    @IBOutlet weak var block16: UIImageView!
+    @IBOutlet weak var block17: UIImageView!
+    @IBOutlet weak var block18: UIImageView!
+    @IBOutlet weak var block19: UIImageView!
+    @IBOutlet weak var block20: UIImageView!
+    @IBOutlet weak var block21: UIImageView!
+    @IBOutlet weak var block22: UIImageView!
+    @IBOutlet weak var block23: UIImageView!
+    @IBOutlet weak var block24: UIImageView!
+    @IBOutlet weak var block25: UIImageView!
+    @IBOutlet weak var block26: UIImageView!
+    @IBOutlet weak var block27: UIImageView!
+    @IBOutlet weak var block28: UIImageView!
+    @IBOutlet weak var block29: UIImageView!
+    @IBOutlet weak var block30: UIImageView!
+    @IBOutlet weak var block31: UIImageView!
+    @IBOutlet weak var block32: UIImageView!
+    @IBOutlet weak var block33: UIImageView!
+    @IBOutlet weak var block34: UIImageView!
+    @IBOutlet weak var block35: UIImageView!
+    @IBOutlet weak var block36: UIImageView!
+    @IBOutlet weak var block37: UIImageView!
+    @IBOutlet weak var block38: UIImageView!
+    @IBOutlet weak var block39: UIImageView!
+    @IBOutlet weak var block40: UIImageView!
+    @IBOutlet weak var block41: UIImageView!
+    @IBOutlet weak var block42: UIImageView!
+    @IBOutlet weak var block43: UIImageView!
+    @IBOutlet weak var block44: UIImageView!
+    @IBOutlet weak var block45: UIImageView!
     
     
+    @IBOutlet weak var previousHabits: UIButton!
+    @IBOutlet weak var nextHabit: UIButton!
     
     
     func showBlocks(numberOfBlocks: Int)  {
-        let blocks = [block1, block2,block3]
+        let blocks = [block1, block2,block3,block4,block5,block6,block7,block8,block9,block10,block11,block12,block13,block14,block15,block16,block17,block18,block19,block20,block21,block22,block23,block24,block25,block26,block27,block28,block29,block30,block31,block32,block33,block34,block35,block36,block37,block38,block39,block40,block41,block42,block43,block44,block45]
+        
         var blockLocal = 0
    
         for block in blocks {
