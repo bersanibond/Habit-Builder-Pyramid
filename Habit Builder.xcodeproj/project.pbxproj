@@ -13,17 +13,23 @@
 		6A0A2FA3214DB86A00613E63 /* Habit_Builder.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6A0A2FA1214DB86A00613E63 /* Habit_Builder.xcdatamodeld */; };
 		6A0A2FA5214DB86C00613E63 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A0A2FA4214DB86C00613E63 /* Assets.xcassets */; };
 		6A0A2FA8214DB86C00613E63 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A0A2FA6214DB86C00613E63 /* LaunchScreen.storyboard */; };
+		6A2C8DA7218266780012CFD3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2C8DA6218266780012CFD3 /* StoreKit.framework */; };
+		6A2C8DA92183BAD70012CFD3 /* IAPHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C8DA82183BAD70012CFD3 /* IAPHelper.swift */; };
+		6A2C8DAB2183BAEF0012CFD3 /* PyramidProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C8DAA2183BAEF0012CFD3 /* PyramidProducts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6A0A2F97214DB86A00613E63 /* Habit Builder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Habit Builder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A0A2F97214DB86A00613E63 /* Goals Pyramid.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Goals Pyramid.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A0A2F9A214DB86A00613E63 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		6A0A2F9C214DB86A00613E63 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		6A0A2F9C214DB86A00613E63 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		6A0A2F9F214DB86A00613E63 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6A0A2FA2214DB86A00613E63 /* Habit_Builder.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Habit_Builder.xcdatamodel; sourceTree = "<group>"; };
 		6A0A2FA4214DB86C00613E63 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6A0A2FA7214DB86C00613E63 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6A0A2FA9214DB86C00613E63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6A2C8DA6218266780012CFD3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		6A2C8DA82183BAD70012CFD3 /* IAPHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAPHelper.swift; sourceTree = "<group>"; };
+		6A2C8DAA2183BAEF0012CFD3 /* PyramidProducts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PyramidProducts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A2C8DA7218266780012CFD3 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,13 +49,14 @@
 			children = (
 				6A0A2F99214DB86A00613E63 /* Habit Builder */,
 				6A0A2F98214DB86A00613E63 /* Products */,
+				6A2C8DA5218266780012CFD3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		6A0A2F98214DB86A00613E63 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6A0A2F97214DB86A00613E63 /* Habit Builder.app */,
+				6A0A2F97214DB86A00613E63 /* Goals Pyramid.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -57,6 +65,8 @@
 			isa = PBXGroup;
 			children = (
 				6A0A2F9A214DB86A00613E63 /* AppDelegate.swift */,
+				6A2C8DA82183BAD70012CFD3 /* IAPHelper.swift */,
+				6A2C8DAA2183BAEF0012CFD3 /* PyramidProducts.swift */,
 				6A0A2F9C214DB86A00613E63 /* ViewController.swift */,
 				6A0A2F9E214DB86A00613E63 /* Main.storyboard */,
 				6A0A2FA4214DB86C00613E63 /* Assets.xcassets */,
@@ -65,6 +75,14 @@
 				6A0A2FA1214DB86A00613E63 /* Habit_Builder.xcdatamodeld */,
 			);
 			path = "Habit Builder";
+			sourceTree = "<group>";
+		};
+		6A2C8DA5218266780012CFD3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6A2C8DA6218266780012CFD3 /* StoreKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -84,7 +102,7 @@
 			);
 			name = "Habit Builder";
 			productName = "Habit Builder";
-			productReference = 6A0A2F97214DB86A00613E63 /* Habit Builder.app */;
+			productReference = 6A0A2F97214DB86A00613E63 /* Goals Pyramid.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -99,6 +117,12 @@
 				TargetAttributes = {
 					6A0A2F96214DB86900613E63 = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1000;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -138,8 +162,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A2C8DA92183BAD70012CFD3 /* IAPHelper.swift in Sources */,
 				6A0A2F9D214DB86A00613E63 /* ViewController.swift in Sources */,
 				6A0A2F9B214DB86A00613E63 /* AppDelegate.swift in Sources */,
+				6A2C8DAB2183BAEF0012CFD3 /* PyramidProducts.swift in Sources */,
 				6A0A2FA3214DB86A00613E63 /* Habit_Builder.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -291,9 +317,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "henrique.Habit-Builder";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.henriquebersani.HabitPyramid;
+				PRODUCT_NAME = "Goals Pyramid";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -309,9 +335,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "henrique.Habit-Builder";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.henriquebersani.HabitPyramid;
+				PRODUCT_NAME = "Goals Pyramid";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
