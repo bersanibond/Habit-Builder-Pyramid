@@ -25,15 +25,49 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var numberOfHabitsMinusOne: Int = 0
     let todayDate = Date()
     let calendar = Calendar.current
+    var inAppPurchase = 0
     
     var appLastLogin: Any?
     @IBOutlet weak var nameTheHabit: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        In-App Purchase
+        
+       var purchase = 0
         
         
         
+        IAPHandler.shared.fetchAvailableProducts()
+        IAPHandler.shared.purchaseStatusBlock = {[weak self] (type) in
+            guard let strongSelf = self else{ return }
+            if type == .purchased {
+                purchase = 1
+                self?.inAppPurchase = purchase
+                self!.defaults.set(purchase, forKey: "InAppPurchase")
+                print("you purchase this item!")
+                let alertView = UIAlertController(title: "", message: type.message(), preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in
+                    self?.habitName.isHidden = true
+                    self?.pyramidImage.isHidden = true
+                    self?.start.isHidden = true
+                    self?.habitsView.isHidden = true
+                    self?.nameTheHabit.text = ""
+                    
+                    
+                })
+                alertView.addAction(action)
+                strongSelf.present(alertView, animated: true, completion: nil)
+            }
+        }
+
+        if let inAppPurchased = defaults.integer(forKey: "InAppPurchase") as? Int {
+            inAppPurchase = inAppPurchased
+        }
+     
+        
+        print("purchase :\(inAppPurchase)")
         if let tutorial = defaults.integer(forKey: "TutorialNumber") as? Int {
             tutorialNumber = tutorial
         }
@@ -65,18 +99,44 @@ class ViewController: UIViewController, UITextFieldDelegate {
         habitLabelDisplaying.text = habitsLabelArray.last
         
         let hour = calendar.component(.hour, from: todayDate)
-        let minute = calendar.component(.minute, from: todayDate)
+        var minute = calendar.component(.minute, from: todayDate)
         let day = calendar.component(.day, from: todayDate)
         let month = calendar.component(.month, from: todayDate)
         let year = calendar.component(.year, from: todayDate)
+        switch minute {
+        case 0 :
+         minute = 00
+        case 1:
+            minute = 01
+        case 2:
+            minute = 02
+        case 3:
+            minute = 03
+        case 4:
+            minute = 04
+        case 5:
+            minute = 05
+        case 6:
+            minute = 06
+        case 7:
+            minute = 07
+        case 8:
+            minute = 08
+        case 9:
+            minute = 09
+            break
+        default:
+            print("default")
+        }
         
         print("\(day)/\(month)/\(year) \(hour):\(minute)")
         
-        let dateOfToday = "\(day)/\(month)/\(year) \(hour):\(minute)"
+//        let dateOfToday = "\(day)/\(month)/\(year) \(hour):\(minute)"
+        let dateOfToday = String(format: "%02d:%02d:%02d %02d:%02d",day,month,year,hour,minute)
         
         //        lastTimeYouWorkOnThisHabit = date
         
-        if let appLastOpen = defaults.object(forKey: "AppLastOpen") as? String{
+        if let appLastOpen = defaults.object(forKey: "AppLastOpen") as? String {
             appLastLogin = appLastOpen
         }
         
@@ -92,6 +152,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             keyOfLabelDisplaying = habitLabelDisplaying.text
             blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
             showBlocks(numberOfBlocks: blockInPyramidCount)
+            updateLastTimeWorkedOn()
         }
         print("applastLogIn: \(appLastLogIn)")
         
@@ -102,40 +163,99 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 goalDoneForToday.updateValue(false, forKey: key)
             }
         }
+        unlimitedPyramidsButtonOutlet.backgroundColor = .clear
+        unlimitedPyramidsButtonOutlet.layer.cornerRadius = 5
+        unlimitedPyramidsButtonOutlet.layer.borderWidth = 2
+        unlimitedPyramidsButtonOutlet.layer.borderColor = UIColor(red: 53.0/255.0, green: 117.0/255.0, blue: 231.0/255.0, alpha: 1.0).cgColor
+        
         buildButton.backgroundColor = .clear
         buildButton.layer.cornerRadius = 5
         buildButton.layer.borderWidth = 2
-        
         buildButton.layer.borderColor = UIColor.white.cgColor
-        //            Comparing Dates
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-////        today
-//        let myString = dateFormatter.string(from: todayDate)
-//        let yourDate = dateFormatter.date(from: myString)
-//
-////        lastOpened
-//        let lastOpendedDateString = dateFormatter.string(from: appLastLogInInDate as! Date)
-//        let myLastOpendedDateInDate = dateFormatter.date(from: lastOpendedDateString)
-//
+        start.backgroundColor = .clear
+        start.layer.cornerRadius = 5
+        start.layer.borderWidth = 2
+        start.layer.borderColor = UIColor(red: 0.0/255.0, green: 249.0/255.0, blue: 0.0/255.0, alpha: 1.0).cgColor
+       
       
-//        dateFormatter.dateFormat = "dd/MM/yyyy"
-//        let myRealString = dateFormatter.string(from: yourDate!)
-//        let myRealLastTime = dateFormatter.string(from: myLastOpendedDateInDate!)
-//
-        
-//        if appLastLogIn.count > 2 {
-//        let daysSinceLastLogIn = Calendar.current.dateComponents([.day], from: myLastOpendedDateInDate!, to: yourDate!).date
-//                                        print("Days Since last Log In : \(daysSinceLastLogIn)")
-//
-//                                    }
-        
-        
-        
-        
         nameTheHabit.delegate = self
+        
+//        swipe function
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(sender:)))
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(sender:)))
+        leftSwipe.direction = .left
+        
+        
+        view.addGestureRecognizer(rightSwipe)
+        view.addGestureRecognizer(leftSwipe)
+        
+        
        
     }
+    
+    
+      @objc func handleSwipe(sender: UISwipeGestureRecognizer){
+        if sender.state == .ended {
+            switch sender.direction {
+            case .right:
+//                print(currentHabit)
+//                previous
+                if habitsLabelArray.count != 0 {
+                   habitsView.isHidden = false
+                }
+                if currentHabit < habitsLabelArray.count - 1 {
+                    let previousHabit: Int = currentHabit + 1
+                    habitLabelDisplaying.text = habitsLabelArray[previousHabit]
+                    keyOfLabelDisplaying = habitLabelDisplaying.text
+                    blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
+                    print(blockInPyramidCount)
+                    print("blockarray:\(habitsBlocksArray)")
+                    currentHabit = previousHabit
+                    showBlocks(numberOfBlocks: blockInPyramidCount)
+                    updateLastTimeWorkedOn()
+                    print(currentHabit)
+                    print(habitsLabelArray.count)
+                    
+                    if currentHabit > 0 {
+                        nextHabit.isHidden = false
+                    }
+                    if currentHabit == habitsLabelArray.count-1 {
+                        previousHabits.isHidden = true
+                    }
+                    
+                }
+            case .left:
+                print(currentHabit)
+//                next
+                if currentHabit > 0 {
+                    
+                    let nextHabitNumber:Int = currentHabit - 1
+                    //        print(numberOfHabits)
+                    //        print(nextHabit)
+                    //        print(habitsLabelArray)
+                    habitLabelDisplaying.text = habitsLabelArray[nextHabitNumber]
+                    keyOfLabelDisplaying = habitLabelDisplaying.text
+                    blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
+                    print(blockInPyramidCount)
+                    print("blockarray:\(habitsBlocksArray)")
+                    updateLastTimeWorkedOn()
+                    currentHabit = nextHabitNumber
+                    showBlocks(numberOfBlocks: blockInPyramidCount)
+                    previousHabits.isHidden = false
+                    
+                    if currentHabit == 0 {
+                        nextHabit.isHidden = true
+                    }
+                }
+                
+            default:
+                break
+            }
+        }
+    }
+    
+    
+    
     
     func textFieldShouldReturn(_ scoreText: UITextField) -> Bool {
         self.view.endEditing(true)
@@ -152,17 +272,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
         
     }
-    
-    
-    
-    
+   
            //    let differentDays = Calendar.current.dateComponents([.day], from: date1, to: date2).date
 //  let differentDays = Calendar.current.dateComponents([.day], from: todayDate, to: <#T##Date#>)
 
     @IBOutlet weak var start: UIButton!
-    
-    
-    
+   
     @IBAction func addHabit(_ sender: UIButton) {
         
         if nameTheHabit.hasText {
@@ -187,14 +302,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var buildButton: UIButton!
     @IBOutlet weak var habitsView: UIView!
     
-    
-    
-    
-    
-    
-    
-    
-    
+   
     @IBAction func startHabit(_ sender: UIButton) {
         habitsView.isHidden = false
         habitNameToArray = habitName.text
@@ -230,18 +338,75 @@ class ViewController: UIViewController, UITextFieldDelegate {
             nextHabit.isHidden = true
         }
        print(habitsLabelArray.count)
+        lastTimeWorkedOn.text = ""
     }
+//    In App Purchase
+    
+    @IBOutlet weak var inAppPurchaseView: UIView!
+    @IBAction func backFromInAppPurchase(_ sender: UIButton) {
+        inAppPurchaseView.isHidden = true
+        if inAppPurchase == 1 {
+            habitsView.isHidden = true
+            habitName.isHidden = true
+            pyramidImage.isHidden = true
+            start.isHidden = true
+            nameTheHabit.text = ""
+        }
+       
+    }
+    
+    @IBOutlet weak var unlimitedPyramidsButtonOutlet: UIButton!
+    @IBAction func unlimitedPyrsmidsButton(_ sender: UIButton) {
+        IAPHandler.shared.purchaseMyProduct(index: 0)
+    }
+
     
     @IBAction func addMorehabits(_ sender: Any) {
-//        PyramidProducts.store.buyProduct(SKProduct)
-//        habitName.isHidden = true
-//        pyramidImage.isHidden = true
-//        start.isHidden = true
-//        habitsView.isHidden = true
-//        nameTheHabit.text = ""
+//        let purchase = 0
+//        self.inAppPurchase = purchase
+//        self.defaults.set(purchase, forKey: "InAppPurchase")
+    
+        if habitsLabelArray.count < 1 || inAppPurchase == 1 {
+            habitName.isHidden = true
+            pyramidImage.isHidden = true
+            start.isHidden = true
+            habitsView.isHidden = true
+            nameTheHabit.text = ""
+        } else if inAppPurchase == 0 {
+            inAppPurchaseView.isHidden = false
+        }
+    }
+   
+    
+    @IBAction func restorePurchaseButton(_ sender: Any) {
+        IAPHandler.shared.restorePurchase()
+        
+        let alert = UIAlertController(title: "Restore purchase made in previous owned device", message: "", preferredStyle: .alert)
+        let no = UIAlertAction(title: "No", style: .default){ (no) in
+            print("test")
+        }
+        let yes = UIAlertAction(title: "Yes", style: .default) { (yes) in
+          self.restoredLabel.isHidden = false
+            self.restoreButtonOutlet.isHidden = true
+            if restoreP == true {
+                let purchase = 1
+                self.inAppPurchase = purchase
+                self.defaults.set(purchase, forKey: "InAppPurchase")
+                self.restoredLabel.text = "Restored"
+            } else {
+                self.restoredLabel.text = "Previous purchase not found"
+            }
+        }
+        
+        alert.addAction(no)
+        alert.addAction(yes)
+        present(alert, animated: true, completion: nil)
     }
     
-//   Building Pyramid
+    @IBOutlet weak var restoredLabel: UILabel!
+    
+    @IBOutlet weak var restoreButtonOutlet: UIButton!
+    //   Building Pyramid
     
 
     @IBOutlet weak var habitLabelDisplaying: UILabel!
@@ -249,17 +414,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBAction func buildHabit(_ sender: Any) {
 
         keyOfLabelDisplaying = habitLabelDisplaying.text
-        let habitAlreadyBuiltToday = goalDoneForToday[keyOfLabelDisplaying!]
+//        let habitAlreadyBuiltToday = goalDoneForToday[keyOfLabelDisplaying!]
         
         //      Time
         let lastSignIn = Date()
         let hour = calendar.component(.hour, from: lastSignIn)
         let minute = calendar.component(.minute, from: lastSignIn)
+       
         let day = calendar.component(.day, from: lastSignIn)
         let month = calendar.component(.month, from: lastSignIn)
         let year = calendar.component(.year, from: lastSignIn)
         print("\(day)-\(month)-\(year)  \(hour):\(minute)")
-        let date = "\(day)-\(month)-\(year)  \(hour):\(minute)"
+
+        let date =  String(format: "%02d/%02d/%02d at %02d:%02d",day,month,year,hour,minute)
         lastTimeYouWorkOnThisHabit = date
         
 //        if habitAlreadyBuiltToday == false {
@@ -273,13 +440,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
             self.defaults.set(self.habitsBlocksArray, forKey: "HabitsBlockArray")
             print(habitsBlocksArray[keyOfLabelDisplaying!]!)
             print(keyOfLabelDisplaying!)
-        print(lastSignInDate)
+            print(lastSignInDate)
 //            print("goaldonefortoday: \(goalDoneForToday)")
 //            print(lastSignInDate)
         //        }
         keyOfLabelDisplaying = habitLabelDisplaying.text
         blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
         showBlocks(numberOfBlocks: blockInPyramidCount)
+        updateLastTimeWorkedOn()
     }
     
     @IBAction func previousHabit(_ sender: UIButton) {
@@ -292,7 +460,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             print("blockarray:\(habitsBlocksArray)")
             currentHabit = previousHabit
             showBlocks(numberOfBlocks: blockInPyramidCount)
-            
+            updateLastTimeWorkedOn()
             print(currentHabit)
             print(habitsLabelArray.count)
 
@@ -319,6 +487,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
             print(blockInPyramidCount)
             print("blockarray:\(habitsBlocksArray)")
+           updateLastTimeWorkedOn()
             currentHabit = nextHabitNumber
             showBlocks(numberOfBlocks: blockInPyramidCount)
             previousHabits.isHidden = false
@@ -328,7 +497,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
+    var empty = ""
+    func updateLastTimeWorkedOn () {
+        let value = lastSignInDate[keyOfLabelDisplaying!]
+        if (value?.isEmpty)! {
+            lastTimeWorkedOn.text = ""
+        } else {
+            lastTimeWorkedOn.text = "Last built: \(lastSignInDate[keyOfLabelDisplaying!] ?? empty)"
+        }
+        
+    }
 
+    @IBOutlet weak var lastTimeWorkedOn: UILabel!
     @IBOutlet weak var block1: UIImageView!
     @IBOutlet weak var block2: UIImageView!
     @IBOutlet weak var block3: UIImageView!
@@ -387,42 +567,33 @@ class ViewController: UIViewController, UITextFieldDelegate {
    
         for block in blocks {
             if blockLocal < numberOfBlocks {
-                block?.isHidden = false
+//                block?.isHidden = false
+                block?.backgroundColor = UIColor(red: 255.0/255.0, green: 231.0/255.0, blue: 40.0/255.0, alpha: 1.0)
+                block?.alpha = 1
+                
                 blockLocal += 1
          
             } else {
-                block?.isHidden = true
+//                block?.isHidden = true
+                block?.backgroundColor = UIColor.white
+                block?.alpha = 0.30
             }
         }
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
+  
     @IBAction func deleteHabit(_ sender: UIButton) {
         keyOfLabelDisplaying = habitLabelDisplaying.text
-        
         let alert = UIAlertController(title: "Delete \(keyOfLabelDisplaying!)", message: "", preferredStyle: .alert)
         let no = UIAlertAction(title: "No", style: .default){ (no) in
             print("test")
         }
-        
         let yes = UIAlertAction(title: "Yes", style: .default) { (yes) in
-            
-            
             self.habitsBlocksArray[self.keyOfLabelDisplaying!] = nil
             self.habitsLabelArray.removeAll{ $0 == self.keyOfLabelDisplaying! }
             self.lastSignInDate[self.keyOfLabelDisplaying!] = nil
             self.goalDoneForToday[self.keyOfLabelDisplaying!] = nil
             print(self.habitsBlocksArray)
-            
-         
-            
             self.defaults.set(self.habitsLabelArray, forKey: "HabitsLabelArray")
             self.defaults.set(self.habitsBlocksArray, forKey: "HabitsBlockArray")
             self.defaults.set(self.lastSignInDate, forKey: "LastSignInDate")
@@ -435,7 +606,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 self.keyOfLabelDisplaying = self.habitLabelDisplaying.text
                 self.blockInPyramidCount = self.habitsBlocksArray[self.keyOfLabelDisplaying!]!
                 self.showBlocks(numberOfBlocks: self.blockInPyramidCount)
-                
+                self.updateLastTimeWorkedOn()
                 if self.habitsLabelArray.count > 1 {
                     self.nextHabit.isHidden = false
                 }
@@ -458,6 +629,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         alert.addAction(no)
         alert.addAction(yes)
         present(alert, animated: true, completion: nil)
+        
     }
     
 //    Tutorial
@@ -491,10 +663,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
             i?.isHidden = true
         }
         
-        tutorialExplaining.text = "Every time that you work on your habit, a block is added to the Pyramid"
+        tutorialExplaining.text = "Build your Habit Pyramid whenever you work on your habit"
         
         if tutorialNumber == 1 {
             firstTimeUser = false
+//            tutorialNumber = 0
           self.defaults.set(self.tutorialNumber, forKey: "TutorialNumber")
            tutorialView.isHidden = true
         }
