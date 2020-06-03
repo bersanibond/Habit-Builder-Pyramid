@@ -8,8 +8,10 @@
 
 import UIKit
 import StoreKit
+import Firebase
+import Purchases
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController, CreationDelegateProtocol, SubscriptionDelegateProtocol {
    
     var habitsLabelArray = [String]()
     var habitsBlocksArray = [String: Int]()
@@ -26,9 +28,34 @@ class ViewController: UIViewController, UITextFieldDelegate {
     let todayDate = Date()
     let calendar = Calendar.current
     var inAppPurchase = 0
+    var subPlayer: SubscriptionViewController?
+     var habitPlayer: CategoryViewController?
     
+    @IBOutlet weak var deleteHabitBtn: UIButton!
     var appLastLogin: Any?
     @IBOutlet weak var nameTheHabit: UITextField!
+    func activateSub(){
+        isSubscribed = true
+        
+    }
+    var isSubscribed = false
+    func actionForEmptyHabits(){
+        if habitsLabelArray.count == 0 {
+            lastTimeWorkedOn.text = "No Habit Found"
+            habitLabelDisplaying.isHidden = true
+            deleteHabitBtn.isEnabled = false
+            deleteHabitBtn.layer.opacity = 0.5
+            buildButton.isHidden = true
+            blockInPyramidCount = 0
+            showBlocks(numberOfBlocks: blockInPyramidCount)
+        } else if habitsLabelArray.count > 0 {
+            habitLabelDisplaying.isHidden = false
+            deleteHabitBtn.isEnabled = true
+            deleteHabitBtn.layer.opacity = 1
+            buildButton.isHidden = false
+
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,31 +64,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
        var purchase = 0
         
-        
-        
-        IAPHandler.shared.fetchAvailableProducts()
-        IAPHandler.shared.purchaseStatusBlock = {[weak self] (type) in
-            guard let strongSelf = self else{ return }
-            if type == .purchased {
-                purchase = 1
-                self?.inAppPurchase = purchase
-                self!.defaults.set(purchase, forKey: "InAppPurchase")
-                print("you purchase this item!")
-                let alertView = UIAlertController(title: "", message: type.message(), preferredStyle: .alert)
-                let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in
-                    self?.habitName.isHidden = true
-                    self?.pyramidImage.isHidden = true
-                    self?.start.isHidden = true
-                    self?.habitsView.isHidden = true
-                    self?.nameTheHabit.text = ""
-                    
-                    
-                })
-                alertView.addAction(action)
-                strongSelf.present(alertView, animated: true, completion: nil)
-            }
-        }
-
         if let inAppPurchased = defaults.integer(forKey: "InAppPurchase") as? Int {
             inAppPurchase = inAppPurchased
         }
@@ -71,10 +73,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
         if let tutorial = defaults.integer(forKey: "TutorialNumber") as? Int {
             tutorialNumber = tutorial
         }
+        print("TUTORIAL NUMBER \(tutorialNumber)")
        
-        if tutorialNumber > 0 {
-            tutorialView.isHidden = true
-        }
+        
         
         if let labelArray = defaults.array(forKey: "HabitsLabelArray") as? [String]{
             habitsLabelArray = labelArray
@@ -88,10 +89,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
         if let goalDone = defaults.dictionary(forKey: "GoalDoneForToday") as? [String: Bool]{
             goalDoneForToday = goalDone
         }
-        if habitsLabelArray.isEmpty {
-            habitsView.isHidden = true
-        }
-        
+        if let id = defaults.string(forKey: "UserID") {
+                          userID = id
+                      }
+        print("USER ID \(userID)")
+//        if habitsLabelArray.isEmpty {
+//            habitsView.isHidden = true
+//        }
+        print("HABIT ARRAY \(habitsLabelArray)")
         var numberOfHabitsForArray: Int = 0
         numberOfHabitsForArray = habitsLabelArray.count
         numberOfHabitsMinusOne = numberOfHabitsForArray - 1
@@ -128,25 +133,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
         default:
             print("default")
         }
-        
         print("\(day)/\(month)/\(year) \(hour):\(minute)")
-        
-//        let dateOfToday = "\(day)/\(month)/\(year) \(hour):\(minute)"
         let dateOfToday = String(format: "%02d:%02d:%02d %02d:%02d",day,month,year,hour,minute)
-        
-        //        lastTimeYouWorkOnThisHabit = date
-        
         if let appLastOpen = defaults.object(forKey: "AppLastOpen") as? String {
             appLastLogin = appLastOpen
         }
-        
-//        let appLastLogInInDate = appLastLogin
-        
         let appLastLogIn = "\(String(describing: appLastLogin))"
         
         previousHabits.isHidden = true
-        if habitsLabelArray.count == 1 {
+        if habitsLabelArray.count <= 1 {
             nextHabit.isHidden = true
+        } else if habitsLabelArray.count > 1 {
+            nextHabit.isHidden = false
         }
         if habitsLabelArray.count > 0 {
             keyOfLabelDisplaying = habitLabelDisplaying.text
@@ -169,28 +167,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
         unlimitedPyramidsButtonOutlet.layer.borderColor = UIColor(red: 53.0/255.0, green: 117.0/255.0, blue: 231.0/255.0, alpha: 1.0).cgColor
         
         buildButton.backgroundColor = .clear
-        buildButton.layer.cornerRadius = 5
+        buildButton.layer.cornerRadius = buildButton.frame.height/2
         buildButton.layer.borderWidth = 2
-        buildButton.layer.borderColor = UIColor.white.cgColor
-        start.backgroundColor = .clear
-        start.layer.cornerRadius = 5
-        start.layer.borderWidth = 2
-        start.layer.borderColor = UIColor(red: 0.0/255.0, green: 249.0/255.0, blue: 0.0/255.0, alpha: 1.0).cgColor
-       
-      
-        nameTheHabit.delegate = self
-        
+        buildButton.layer.borderColor = UIColor.systemYellow.cgColor
+
 //        swipe function
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(sender:)))
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(sender:)))
         leftSwipe.direction = .left
-        
-        
         view.addGestureRecognizer(rightSwipe)
         view.addGestureRecognizer(leftSwipe)
-        
-        
-       
+         actionForEmptyHabits()
+    }
+    var userID = ""
+    override func viewDidAppear(_ animated: Bool) {
+        if tutorialNumber == 0 {
+        //            tutorialView.isHidden = true
+                    performSegue(withIdentifier: "tutorialSegue", sender: self)
+                }
     }
     
     
@@ -310,12 +304,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         habitsBlocksArray.updateValue(0, forKey: habitNameToArray!)
         goalDoneForToday.updateValue(false, forKey: habitNameToArray!)
         lastSignInDate.updateValue("", forKey: habitNameToArray!)
-//        habitsLabelArray.removeAll()
-//        habitsBlocksArray.removeAll()
-//        lastSignInDate.removeAll()
-//        goalDoneForToday.removeAll()
-//        defaults.set("", forKey: "AppLastOpen")
-      
+
         self.defaults.set(self.habitsLabelArray, forKey: "HabitsLabelArray")
         self.defaults.set(self.habitsBlocksArray, forKey: "HabitsBlockArray")
         self.defaults.set(self.lastSignInDate, forKey: "LastSignInDate")
@@ -362,19 +351,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     
     @IBAction func addMorehabits(_ sender: Any) {
-//        let purchase = 0
-//        self.inAppPurchase = purchase
-//        self.defaults.set(purchase, forKey: "InAppPurchase")
+
     
-        if habitsLabelArray.count < 1 || inAppPurchase == 1 {
-            habitName.isHidden = true
-            pyramidImage.isHidden = true
-            start.isHidden = true
-            habitsView.isHidden = true
-            nameTheHabit.text = ""
-        } else if inAppPurchase == 0 {
-            inAppPurchaseView.isHidden = false
-        }
+//        if habitsLabelArray.count < 1 || inAppPurchase == 1 {
+//            habitName.isHidden = true
+//            pyramidImage.isHidden = true
+//            start.isHidden = true
+//            habitsView.isHidden = true
+//            nameTheHabit.text = ""
+//        } else if inAppPurchase == 0 {
+//            inAppPurchaseView.isHidden = false
+//        }
     }
    
     
@@ -475,7 +462,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
  
     @IBAction func nextHabit(_ sender: UIButton) {
       
-        
         if currentHabit > 0 {
        
             let nextHabitNumber:Int = currentHabit - 1
@@ -598,31 +584,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
             self.defaults.set(self.habitsBlocksArray, forKey: "HabitsBlockArray")
             self.defaults.set(self.lastSignInDate, forKey: "LastSignInDate")
             self.defaults.set(self.goalDoneForToday, forKey: "GoalDoneForToday")
-            if self.habitsLabelArray.count > 0 {
-                let currentHabit = self.habitsLabelArray.count - 1
-                self.habitLabelDisplaying.text = self.habitsLabelArray[currentHabit]
-                self.currentHabit = self.habitsLabelArray.count - 1
-                print(self.currentHabit)
-                self.keyOfLabelDisplaying = self.habitLabelDisplaying.text
-                self.blockInPyramidCount = self.habitsBlocksArray[self.keyOfLabelDisplaying!]!
-                self.showBlocks(numberOfBlocks: self.blockInPyramidCount)
-                self.updateLastTimeWorkedOn()
-                if self.habitsLabelArray.count > 1 {
-                    self.nextHabit.isHidden = false
-                }
-                if self.habitsLabelArray.count == 1 {
-                    self.nextHabit.isHidden = true
-                    self.previousHabits.isHidden = true
-                }
-                print(self.habitLabelDisplaying)
-            }
-            if self.habitsLabelArray.isEmpty {
-                self.habitsView.isHidden = true
-                self.habitName.isHidden = true
-                self.pyramidImage.isHidden = true
-                self.start.isHidden = true
-                self.nameTheHabit.text = ""
-            }
+
+            self.viewDidLoad()
+         
         }
         
         
@@ -633,6 +597,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
 //    Tutorial
+    func creationActivated(){
+        viewDidLoad()
+    }
     
     @IBOutlet weak var tutorialView: UIView!
     
@@ -673,7 +640,27 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
         tutorialNumber += 1
     }
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+           if segue.destination is CategoryViewController {
+               let vc = segue.destination as? CategoryViewController
+               habitPlayer = vc
+               habitPlayer?.delegateContainer = self
+            vc?.habitsLabelArray = habitsLabelArray
+            vc?.habitsBlocksArray = habitsBlocksArray
+            vc?.goalDoneForToday = goalDoneForToday
+            vc?.lastSignInDate = lastSignInDate
+            vc?.userID = userID
+            vc?.isMember = isSubscribed
+            
+            
+
+            //        habitsLabelArray.append(habitNameToArray)
+            //         habitsBlocksArray.updateValue(0, forKey: habitNameToArray)
+            //         goalDoneForToday.updateValue(false, forKey: habitNameToArray)
+            //        lastSignInDate.updateValue("", forKey: habitNameToArray)
+              
+           }
+    }
     
     
 }
