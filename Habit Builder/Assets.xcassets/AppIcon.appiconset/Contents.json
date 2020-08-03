@@ -55,11 +55,13 @@
       "size" : "20x20"
     },
     {
+      "filename" : "habitPyramidlogo29px.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "29x29"
     },
     {
+      "filename" : "habitPyramidlogo58px-1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "29x29"
@@ -87,6 +89,7 @@
       "size" : "76x76"
     },
     {
+      "filename" : "habitPyramidlogo167-1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "83.5x83.5"

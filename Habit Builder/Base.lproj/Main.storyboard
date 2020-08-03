@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -602,6 +602,12 @@
                             <imageView userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="desertBackground" translatesAutoresizingMaskIntoConstraints="NO" id="y2s-Hp-Ux1">
                                 <rect key="frame" x="0.0" y="200" width="414" height="696"/>
                             </imageView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TESTT" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tIl-ZK-JYz">
+                                <rect key="frame" x="40" y="832.5" width="334" height="24.5"/>
+                                <fontDescription key="fontDescription" name="ChalkboardSE-Bold" family="Chalkboard SE" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -614,8 +620,11 @@
                             <constraint firstItem="y2s-Hp-Ux1" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="200" id="Wbw-zg-DXR"/>
                             <constraint firstItem="9Eh-4n-bmf" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="ZRc-sx-oSr"/>
                             <constraint firstItem="y2s-Hp-Ux1" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="akc-h0-hdC"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="tIl-ZK-JYz" secondAttribute="bottom" constant="5" id="cd2-NY-2no"/>
                             <constraint firstItem="sN6-kZ-Myh" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="dZ5-ZE-8U3"/>
+                            <constraint firstItem="tIl-ZK-JYz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="p9l-fC-17y"/>
                             <constraint firstItem="9Eh-4n-bmf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="x3L-yl-fQ8"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tIl-ZK-JYz" secondAttribute="trailing" constant="40" id="ypO-d4-oG3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <variation key="default">
@@ -680,6 +689,7 @@
                         <outlet property="previousHabits" destination="uIQ-bt-CrT" id="ypN-Lt-Gri"/>
                         <outlet property="restoreButtonOutlet" destination="YGB-8g-twa" id="3tj-5p-snL"/>
                         <outlet property="restoredLabel" destination="nn0-dC-2t2" id="nKF-qU-2y5"/>
+                        <outlet property="testLabel" destination="tIl-ZK-JYz" id="Egh-W0-7A0"/>
                         <outlet property="tutorialView" destination="gws-mz-hzI" id="6fZ-p6-1Xl"/>
                         <outlet property="unlimitedPyramidsButtonOutlet" destination="K4x-HX-xg4" id="BCa-Li-LSh"/>
                         <segue destination="bVd-bK-vqj" kind="presentation" identifier="tutorialSegue" id="eQb-gm-LmC"/>
@@ -867,7 +877,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hpa-LP-5DP">
-                                <rect key="frame" x="82" y="658" width="250" height="50"/>
+                                <rect key="frame" x="82" y="708" width="250" height="50"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="fPm-vf-3L3">
                                         <rect key="frame" x="15" y="5" width="220" height="40"/>
@@ -998,7 +1008,7 @@
                             <constraint firstItem="D6J-N8-kuU" firstAttribute="leading" secondItem="C4g-X2-8SX" secondAttribute="leading" constant="20" id="Q8S-3R-bVq"/>
                             <constraint firstItem="C4g-X2-8SX" firstAttribute="trailing" secondItem="D6J-N8-kuU" secondAttribute="trailing" constant="20" id="aOz-PW-quP"/>
                             <constraint firstItem="C4g-X2-8SX" firstAttribute="bottom" secondItem="gCE-x8-QrJ" secondAttribute="bottom" id="eZ1-pf-oLr"/>
-                            <constraint firstItem="C4g-X2-8SX" firstAttribute="bottom" secondItem="hpa-LP-5DP" secondAttribute="bottom" constant="100" id="h11-e1-w7B"/>
+                            <constraint firstItem="C4g-X2-8SX" firstAttribute="bottom" secondItem="hpa-LP-5DP" secondAttribute="bottom" constant="50" id="h11-e1-w7B"/>
                             <constraint firstItem="hpa-LP-5DP" firstAttribute="centerX" secondItem="Zbf-Od-s5u" secondAttribute="centerX" id="jUl-fK-fpg"/>
                             <constraint firstItem="efN-gc-p4Z" firstAttribute="top" secondItem="C4g-X2-8SX" secondAttribute="top" constant="80" id="lgx-qe-4f6"/>
                         </constraints>
@@ -1524,7 +1534,7 @@
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Z9-SJ-TDJ">
                                         <rect key="frame" x="0.0" y="0.0" width="412" height="403"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <mutableString key="text">Privacy Policy
+                                        <string key="text">Privacy Policy
 Henrique Bersani built the Habit Pyramid app as a Commercial app. This SERVICE is provided by Henrique Bersani and is intended for use as is.
 This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.
 If you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy.
@@ -1547,7 +1557,7 @@ Changes to This Privacy Policy
 I may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Privacy Policy on this page.
 This policy is effective as of 2020-05-15
 Contact Us
-If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at classtunes@gmail.com.</mutableString>
+If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at classtunes@gmail.com.</string>
                                         <color key="textColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1555,7 +1565,7 @@ If you have any questions or suggestions about my Privacy Policy, do not hesitat
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rnp-zY-cPv">
                                         <rect key="frame" x="0.0" y="403" width="412" height="403"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <mutableString key="text">Terms &amp; Conditions
+                                        <string key="text">Terms &amp; Conditions
 By downloading or using the app, these terms will automatically apply to you – you should make sure therefore that you read them carefully before using the app. You’re not allowed to copy, or modify the app, any part of the app, or our trademarks in any way. You’re not allowed to attempt to extract the source code of the app, and you also shouldn’t try to translate the app into other languages, or make derivative versions. The app itself, and all the trade marks, copyright, database rights and other intellectual property rights related to it, still belong to Henrique Bersani.
 Henrique Bersani is committed to ensuring that the app is as useful and efficient as possible. For that reason, we reserve the right to make changes to the app or to charge for its services, at any time and for any reason. We will never charge you for the app or its services without making it very clear to you exactly what you’re paying for.
 The Habit Pyramid app stores and processes personal data that you have provided to us, in order to provide my Service. It’s your responsibility to keep your phone and access to the app secure. We therefore recommend that you do not jailbreak or root your phone, which is the process of removing software restrictions and limitations imposed by the official operating system of your device. It could make your phone vulnerable to malware/viruses/malicious programs, compromise your phone’s security features and it could mean that the Habit Pyramid app won’t work properly or at all.
@@ -1563,7 +1573,7 @@ The app does use third party services that declare their own Terms and Condition
 Link to Terms and Conditions of third party service providers used by the app
 Google Analytics for Firebase
 Firebase Crashlytics
-You should be aware that there are certain things that Henrique Bersani will not take responsibility for. Certain functions of the app will require the app to have an active internet connection. The connection can be Wi-Fi, or provided by your mobile network provider, but Henrique Bersani cannot take responsibility for the app not working at full functionality if you don’t have access to Wi-Fi, and you don’t have any of your data allowance left.</mutableString>
+You should be aware that there are certain things that Henrique Bersani will not take responsibility for. Certain functions of the app will require the app to have an active internet connection. The connection can be Wi-Fi, or provided by your mobile network provider, but Henrique Bersani cannot take responsibility for the app not working at full functionality if you don’t have access to Wi-Fi, and you don’t have any of your data allowance left.</string>
                                         <color key="textColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>

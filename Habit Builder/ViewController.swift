@@ -10,8 +10,10 @@ import UIKit
 import StoreKit
 import Firebase
 import Purchases
+import AVFoundation
+import CoreHaptics
 
-class ViewController: UIViewController, CreationDelegateProtocol, SubscriptionDelegateProtocol {
+class ViewController: UIViewController, CreationDelegateProtocol, SubscriptionDelegateProtocol, LogInDelegateProtocol {
    
     var habitsLabelArray = [String]()
     var habitsBlocksArray = [String: Int]()
@@ -30,6 +32,7 @@ class ViewController: UIViewController, CreationDelegateProtocol, SubscriptionDe
     var inAppPurchase = 0
     var subPlayer: SubscriptionViewController?
      var habitPlayer: CategoryViewController?
+    var logPlayer: TutorialViewController?
     
     @IBOutlet weak var deleteHabitBtn: UIButton!
     var appLastLogin: Any?
@@ -56,12 +59,15 @@ class ViewController: UIViewController, CreationDelegateProtocol, SubscriptionDe
 
         }
     }
+    func logInActivated() {
+        self.viewDidLoad()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("ITSS LOIADINGG")
 //        In-App Purchase
-        
+        rotateMessage()
        var purchase = 0
         
         if let inAppPurchased = defaults.integer(forKey: "InAppPurchase") as? Int {
@@ -178,6 +184,10 @@ class ViewController: UIViewController, CreationDelegateProtocol, SubscriptionDe
         view.addGestureRecognizer(rightSwipe)
         view.addGestureRecognizer(leftSwipe)
          actionForEmptyHabits()
+//        if userID.count != 0 {
+//            Purchases.configure(withAPIKey: "FVhvfcqZlcjztzJbXehxekKUIaflGAOb")
+//        }
+        
     }
     var userID = ""
     override func viewDidAppear(_ animated: Bool) {
@@ -435,8 +445,43 @@ class ViewController: UIViewController, CreationDelegateProtocol, SubscriptionDe
         blockInPyramidCount = habitsBlocksArray[keyOfLabelDisplaying!]!
         showBlocks(numberOfBlocks: blockInPyramidCount)
         updateLastTimeWorkedOn()
+//        UIDevice.vibrate()
+//        let generator = UIImpactFeedbackGenerator(style: .heavy)
+//        generator.impactOccurred()
+                    let generator = UINotificationFeedbackGenerator()
+                               generator.notificationOccurred(.success)
     }
     
+    func rotateMessage() {
+        testLabel.text = congratsLabels.randomElement()
+//                testLabel.text = test
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.testLabel.isHidden = false
+                    self.testLabel.alpha = 100
+
+//                   self.testLabel.isHidden = true
+                    UIView.animate(withDuration: 4.0) {
+                    self.testLabel.frame = CGRect(x: -300, y: 55, width: 100, height: 20)
+                }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) {
+                       UIView.animate(withDuration: 4) {
+                        self.testLabel.alpha = 80
+                        self.testLabel.alpha = 60
+                        self.testLabel.alpha = 40
+                        self.testLabel.alpha = 0
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+                        self.rotateMessage()
+                        
+                       }
+                    }
+               }
+    }
+    var test = ".Habits are important. Up to 90 percent of our everyday behavior is based on habit. \n Nearly all of what we do each day, every day, is simply habit.LLALALALA BIGG tALLLK"
+    let congratsLabels = ["Good Job!","Take control of your habits. Take control of your life.","Habits are important. Up to 90 percent of our everyday behavior is based on habit. Nearly all of what we do each day, every day, is simply habit.","You’ll never change your life until you change something you do daily. The secret of your success is found in your daily routine.","Good habits, once established are just as hard to break as are bad habits.","Consciously create habits because habits unconsciously dictate your life.","You leave old habits behind by starting with the thought, ‘I release the need for this in my life’.","Nothing is stronger than a habit.","Bad habits are easier to abandon today than tomorrow.","Happiness is a habit. Cultivate it.","Laziness is nothing more than the habit of resting before you get tired.","Habits change into character.","Good habits are as addictive as bad habits but much more rewarding.","Good habits are the key to all success.","Your character is the harvest of your habits.","Success is the sum of small efforts repeated day in day out.","If you want to change your world, you need to start cultivating good habits.","Results can only change when we change our consistent actions and make them habits.","Consistency creates habit and our habits shape our life.","If your habits don’t line up with your dream, then you need to either change your habits or change your dream.","And it all began with one small win.","We first make our habits, and then our habits make us.","Motivation is what gets you started, habit is what keeps you going.","We are what we repeatedly do. Excellence, then, is not an act, but a habit.","Successful people are simply those with successful habits."]
+    @IBOutlet weak var sideLabel: NSLayoutConstraint!
+    
+    @IBOutlet weak var testLabel: UILabel!
     @IBAction func previousHabit(_ sender: UIButton) {
         if currentHabit < habitsLabelArray.count - 1 {
             let previousHabit: Int = currentHabit + 1
@@ -651,18 +696,20 @@ class ViewController: UIViewController, CreationDelegateProtocol, SubscriptionDe
             vc?.lastSignInDate = lastSignInDate
             vc?.userID = userID
             vc?.isMember = isSubscribed
-            
-            
-
-            //        habitsLabelArray.append(habitNameToArray)
-            //         habitsBlocksArray.updateValue(0, forKey: habitNameToArray)
-            //         goalDoneForToday.updateValue(false, forKey: habitNameToArray)
-            //        lastSignInDate.updateValue("", forKey: habitNameToArray)
-              
            }
+        if segue.destination is TutorialViewController {
+            let vc = segue.destination as? TutorialViewController
+                      logPlayer = vc
+                      logPlayer?.delegateContainer = self
+        }
     }
     
     
+}
+extension UIDevice {
+    static func vibrate() {
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+    }
 }
 
 

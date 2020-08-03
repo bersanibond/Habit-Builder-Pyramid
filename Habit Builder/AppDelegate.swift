@@ -23,8 +23,8 @@ import Purchases
         didFinishLaunchingWithOptions launchOptions:
         [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
-//        Purchases.debugLogsEnabled = true
-        
+        Purchases.debugLogsEnabled = true
+//         Purchases.configure(withAPIKey: "FVhvfcqZlcjztzJbXehxekKUIaflGAOb")
 
         
         return true

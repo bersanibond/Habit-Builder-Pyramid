@@ -72,7 +72,6 @@ class CategoryViewController: UIViewController, UITextFieldDelegate {
            Purchases.shared.offerings { (offerings, error) in
                        if (offerings != nil) {
                            print("MY OFFERINGS \(offerings?.current))")
-           //              showPaywall(offerings?.current)
                      }
                    }
            Purchases.shared.offerings { (offerings, error) in
@@ -83,10 +82,16 @@ class CategoryViewController: UIViewController, UITextFieldDelegate {
 //                   print("------>> PRODUCT PRICE \(self.package[0].localizedPriceString)")
                    self.membershipPrice = self.package[0].localizedPriceString
                 print("MY PACKAGES pricee \(self.membershipPrice)")
+                if self.membershipPrice.count > 0 {
+                    self.customHabitBtnView.isHidden = false
+                } else if self.membershipPrice.count == 0 && self.pullTimes < 2 {
+                    self.pullSubscriptionData()
+                    self.pullTimes += 1
+                }
             }
                }
         }}
-    
+    var pullTimes = 0
     @IBOutlet weak var lockImg: UIImageView!
     var membershipPrice = ""
     @IBOutlet weak var addHabitView: UIView!
@@ -98,17 +103,14 @@ class CategoryViewController: UIViewController, UITextFieldDelegate {
         categorySelected = "health"
         performSegue(withIdentifier: "habitSegue", sender: self)
     }
-    
     @IBAction func fitnessPressed(_ sender: Any) {
         categorySelected = "fitness"
         performSegue(withIdentifier: "habitSegue", sender: self)
     }
-    
     @IBAction func creativityPressed(_ sender: Any) {
         categorySelected = "creativity"
         performSegue(withIdentifier: "habitSegue", sender: self)
     }
-    
     @IBAction func addictionPressed(_ sender: Any) {
         categorySelected = "addiction"
         performSegue(withIdentifier: "habitSegue", sender: self)
@@ -181,9 +183,10 @@ class CategoryViewController: UIViewController, UITextFieldDelegate {
         if isMember {
             habitCreationView.isHidden = false
         } else {
-            performSegue(withIdentifier: "subscriptionSegue", sender: self)
+            if membershipPrice.count > 0 {
+                 performSegue(withIdentifier: "subscriptionSegue", sender: self)
+            }
         }
-        
     }
     
     @IBOutlet weak var habitName: UILabel!

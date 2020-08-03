@@ -12,10 +12,18 @@ import UIKit
 import StoreKit
 import Firebase
 
+
+protocol LogInDelegateProtocol: class
+{
+    func logInActivated()
+}
+
 class TutorialViewController: UIViewController {
 
     var defaults = UserDefaults.standard
     var userId = ""
+    weak var delegateContainer: LogInDelegateProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let goalDB = Database.database().reference()
@@ -31,10 +39,13 @@ class TutorialViewController: UIViewController {
         self.defaults.set(22, forKey: "TutorialNumber")
     }
     
-
+    override func viewDidDisappear(_ animated: Bool) {
+        self.delegateContainer?.logInActivated()
+    }
     @IBOutlet weak var tutorialDescription: UILabel!
     
     var dismissTutorial = 0
+    
     @IBAction func tutorialNext(_ sender: Any) {
         pyramidImageDone.isHidden = true
         pyramidImageHalfDone.isHidden = false
@@ -52,7 +63,6 @@ class TutorialViewController: UIViewController {
     
     @IBOutlet weak var nextBtn: UIButton!
     @IBOutlet weak var pyramidImageDone: UIImageView!
-    
     @IBOutlet weak var pyramidImageHalfDone: UIImageView!
     
 }

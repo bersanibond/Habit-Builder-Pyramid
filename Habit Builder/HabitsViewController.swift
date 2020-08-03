@@ -166,7 +166,7 @@ var categorySelected = ""
     var healthHabitsArray = ["One Gallon Of Water per Day"]
     var healthDescription = ["Fill your jug with a gallon of water every morning and drink it throughout the day. Add a block to the pyramid when the jug is emptied. There are many benefits to drinking a gallon of water a day such as higher metabolic rate, enhanced exercise performance, weight management, brain function, prevents and treats headaches and promotes skin health."]
 //    Addiction
-    var addictionHabitsArray = ["No Smonking All-Day"]
+    var addictionHabitsArray = ["No Smoking All-Day"]
     var addictionDescription = ["Do not smoke for 24 hours. Add a block to the pyramid whenever the day has ended without smoking. Quitting smoking is a very challenging task, however, with Habit Pyramid you focus on each day at a time."]
 
 }
